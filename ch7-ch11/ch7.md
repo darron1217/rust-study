@@ -168,3 +168,111 @@ pub fn eat_at_restaurant() {
     // meal.seasonal_fruit = String::from("blueberries");
 }
 ```
+
+---
+
+# Shorten
+
+```rs
+mod front_of_house {
+    pub mod hosting {
+        pub fn add_to_waitlist() {}
+    }
+}
+
+use crate::front_of_house::hosting;
+
+mod customer {
+    pub fn eat_at_restaurant() {
+        hosting::add_to_waitlist();
+    }
+}
+
+// 또는
+
+use crate::front_of_house::hosting::add_to_waitlist;
+
+pub fn eat_at_restaurant() {
+    add_to_waitlist();
+}
+```
+
+---
+
+# use Scope
+
+```rs
+mod front_of_house {
+    pub mod hosting {
+        pub fn add_to_waitlist() {}
+    }
+}
+
+use crate::front_of_house::hosting;
+
+mod customer {
+    pub fn eat_at_restaurant() {
+        hosting::add_to_waitlist(); // 에러 발생
+    }
+}
+```
+
+---
+
+# Creating Idiomatic use Paths
+
+- structs, enums 등을 가져올 때는 use전체 경로를 지정하는 것이 관용적
+- `std::fmt::Result`와 `use std::io::Result` 중 어느 것을 가져올지 모호한 상황이 종종 생김
+```rs
+use std::fmt;
+use std::io;
+
+fn function1() -> fmt::Result {
+    // --snip--
+}
+
+fn function2() -> io::Result<()> {
+    // --snip--
+}
+```
+
+---
+
+# Re-export
+```rs
+mod front_of_house {
+    pub mod hosting {
+        pub fn add_to_waitlist() {}
+    }
+}
+
+pub use crate::front_of_house::hosting; // 
+
+pub fn eat_at_restaurant() {
+    hosting::add_to_waitlist();
+}
+```
+
+---
+
+# Module 파일 분리
+
+```rs
+// src/lib.rs
+mod front_of_house;
+
+pub use crate::front_of_house::hosting;
+
+pub fn eat_at_restaurant() {
+    hosting::add_to_waitlist();
+}
+```
+
+```rs
+// src/front_of_house.rs
+pub mod hosting {
+    pub fn add_to_waitlist() {}
+}
+```
+
+--- 
