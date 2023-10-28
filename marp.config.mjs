@@ -1,6 +1,7 @@
 /** @type {import('@marp-team/marp-cli').Config} */
 const config = {
-    theme: 'gaia',
+    themeSet: 'themes',
+    theme: 'curg',
     title: 'Rust Study',
 }
 
