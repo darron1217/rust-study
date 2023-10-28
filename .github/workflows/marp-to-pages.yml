@@ -21,50 +21,23 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Ensure build dir exists
-        run: mkdir -p build
-
-      - name: Copy images directory (if exists)
-        run: if [[ -d img ]]; then cp -R img build/img; fi
-
-      - name: Marp Build (README)
-        uses: docker://marpteam/marp-cli:v3.0.2
+      - name: Marp Build
+        uses: actions/setup-node@v3
         with:
-          args: README.md -o build/index.html
-        env:
-          MARP_USER: root:root
+          node-version: 16.x
+          cache: 'yarn'
+      - run: yarn install --frozen-lockfile
+      - run: yarn build
 
-      - name: Marp Build (README.pdf)
-        uses: docker://marpteam/marp-cli:v3.0.2
-        with:
-          args: README.md --allow-local-files -o build/README.pdf
-        env:
-          MARP_USER: root:root
-
-      - name: Marp Build (README.pptx)
-        uses: docker://marpteam/marp-cli:v3.0.2
-        with:
-          args: README.md --allow-local-files -o build/README.pptx
-        env:
-          MARP_USER: root:root
-
-      - name: Check if docs folder exists
-        id: docs-folder-exists
-        run: bash -c "[[ -d docs ]] ; echo \"has_docs=\$?\" >> \"$GITHUB_OUTPUT\""
-
-      - name: Marp Build (docs folder, if exists)
-        if: steps.docs-folder-exists.outputs.has_docs == '0'
-        uses: docker://marpteam/marp-cli:v3.0.2
-        with:
-          args: -I docs/ -o build/docs/
-        env:
-          MARP_USER: root:root
+      - name: Replace .md with .html in index.html
+        run: |
+          sed -i 's/\.md/.html/g' ./dist/index.html
 
       - name: Deploy preview
         if: ${{ github.event_name == 'pull_request' }}
         uses: rossjrw/pr-preview-action@v1
         with:
-          source-dir: ./build/
+          source-dir: ./dist/
           preview-branch: gh-pages
           umbrella-dir: pr-preview
 
@@ -73,5 +46,5 @@ jobs:
         uses: JamesIves/github-pages-deploy-action@v4
         with:
           branch: gh-pages
-          folder: ./build/
+          folder: ./dist/
           clean-exclude: pr-preview/

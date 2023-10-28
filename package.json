@@ -1,0 +1,14 @@
+{
+  "name": "rust-study",
+  "version": "1.0.0",
+  "repository": "https://github.com/darron1217/rust-study.git",
+  "author": "Darron Park <darron1217@gmail.com>",
+  "license": "MIT",
+  "scripts": {
+    "start": "marp -s ./src",
+    "build": "marp --output=dist --input-dir=src"
+  },
+  "dependencies": {
+    "@marp-team/marp-cli": "^3.3.1"
+  }
+}
