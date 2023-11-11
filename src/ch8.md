@@ -1,5 +1,7 @@
 ---
 marp: true
+class: invert
+transition: slide
 ---
 
 # Common Collections

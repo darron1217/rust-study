@@ -1,7 +1,9 @@
 ---
 marp: true
+class: invert
 ---
-# Rust Study
+
+# Rust Slides
 
 ### [Chapter7. Packages, Crates, and Modules](./ch7.md)
 ### [Chapter8. Common Collections](./ch8.md)
